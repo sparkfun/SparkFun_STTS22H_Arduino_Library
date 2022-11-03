@@ -11,7 +11,7 @@ int32_t sfeSTTS22HWrite(void* fTarget, uint8_t reg, const uint8_t *bufp, uint16_
 int32_t sfeSTTS22HRead(void* fTarget, uint8_t reg, uint8_t *bufp, uint16_t len);
 
 // Initializes the interfacing struct for STMicroelectronic's library. 
-void initCtx(void* handle, stmdev_ctx_t* dev);
+void initCtx(void* handle, stmdev_ctx_t* dev, stmdev_mdelay_ptr delay);
 
 
 #ifdef __cpluplus

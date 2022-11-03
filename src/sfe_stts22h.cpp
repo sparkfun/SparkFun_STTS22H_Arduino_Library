@@ -58,7 +58,7 @@ bool QwDevSTTS22H::isConnected()
 void QwDevSTTS22H::setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
     _sfeBus = &theBus;
-		_i2cAddress = i2cAddress; 
+	_i2cAddress = i2cAddress; 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -123,13 +123,13 @@ int32_t QwDevSTTS22H::readRegisterRegion(uint8_t offset, uint8_t *data, uint16_t
 uint8_t QwDevSTTS22H::getUniqueId()
 {
 
-	uint8_t buff = 0;
-	int32_t retVal = (stts22h_dev_id_get(&sfe_dev, &buff));
+	uint8_t tempVal = 0;
+	int32_t retVal = stts22h_dev_id_get(&sfe_dev, &tempVal);
 
-	if(retVal != 0)
+	if( retVal != 0 )
 		return 0; 
 	
-	return buff;
+	return tempVal;
 }
 
 
@@ -168,4 +168,110 @@ bool QwDevSTTS22H::getDeviceReset()
 	return false; 
 	
 }
+
+//----------------------------------------------General Settings ---------------------------------------------------
+
+/// @brief Sets the STTSH2 output data rate.
+/// @param dataRate 
+/// @return true on successful execution.
+bool QwDevSTTS22H::setDataRate(uint8_t dataRate)
+{
+	int32_t retVal;
+
+	retVal = stts22h_temp_data_rate_set(&sfe_dev, (stts22h_odr_temp_t)&dataRate);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+int8_t QwDevSTTS22H::getDataRate()
+{
+	stts22h_odr_temp_t tempVal;
+	int32_t retVal;
+
+	retVal = stts22h_temp_data_rate_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return -1;
+
+	return (int8_t)tempVal;
+}
+
+
+
+//----------------------------------------------Interrupt Settings---------------------------------------------------
+
+bool QwDevSTTS22H::setIntHighCelsius(float temp)
+{
+	int32_t retVal;
+	int8_t tempC = (int8_t)(temp/0.64) + 64;
+
+	retVal = stts22h_(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+
+
+bool QwDevSTTS22H::setIntLowCelsius(float temp)
+{
+	int32_t retVal;
+	int8_t tempC = (int8_t)(temp/0.64) + 64;
+
+	retVal = stts22h_(&sfe_dev, tempC);
+
+	if(retVal != 0)
+		return false;
+
+	return true;
+	
+}
+
+
+bool QwDevSTTS22H::dataReady()
+{
+	uint8_t tempVal;
+	int32_t retVal;
+
+	retVal = stts22h_temp_flag_data_ready_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return false;
+
+	if( tempVal )
+		return true;
+
+	return false;
+}
+
+
+bool QwDevSTTS22H::getTempRaw(int16_t *temperature)
+{
+	int32_t retVal;
+
+	retVal = stts22h_temperature_raw_get(&sfe_dev, temperature);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+	
+}
+
+bool QwDevSTTS22H::getTemperatureC(float *tempC)
+{
+	int16_t tempVal;
+	bool retVal;
+
+	retVal = getTempRaw(&tempVal);
+	tempC = stts22h_from_lsb_to_celsius(tempVal)
+
+	return retVal;
+}
+
 
