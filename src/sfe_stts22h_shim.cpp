@@ -4,10 +4,11 @@
 
 
 // Initializes the interfacing struct for STMicroelectronic's library. 
-void initCtx(void* handle, stmdev_ctx_t* dev, stmdev_mdelay_ptr* delay )
+void initCtx(void* handle, stmdev_ctx_t* dev)
 {
 	dev->handle = handle; 	
-	dev->mdelay = delay;
+	// Don't need, but we'll initialize it here anyway.
+	dev->mdelay = 0;
 	dev->write_reg = sfeSTTS22HWrite;
 	dev->read_reg = sfeSTTS22HRead;
 }

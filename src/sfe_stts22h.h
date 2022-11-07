@@ -1,3 +1,47 @@
+/*
+sfe_stts22h.h
+
+This is a library written for SparkFun Temperature Sensor - STTS2H (Qwiic)
+
+SparkFun sells these bpards at its website: www.sparkfun.com
+
+Do you like this library? Help support SparkFun. Buy a board!
+
+SparkFun Temperature Sensor - STTS2H              https://www.sparkfun.com/products/21262
+SparkFun Micro Temperature Sensor - STTS2H        https://www.sparkfun.com/products/21051
+
+Written by Elias Santistevan @ SparkFun Electronics, December 2022
+
+Repository:
+    https://github.com/sparkfun/SparkFun_STTS22H_Arduino_Library
+
+
+SparkFun code, firmware, and software is released under the MIT
+License(http://opensource.org/licenses/MIT).
+
+SPDX-License-Identifier: MIT
+
+   The MIT License (MIT)
+
+   Copyright (c) 2022 SparkFun Electronics
+   Permission is hereby granted, free of charge, to any person obtaining a
+   copy of this software and associated documentation files (the "Software"),
+   to deal in the Software without restriction, including without limitation
+   the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   and/or sell copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following conditions: The
+   above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED
+   "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+   PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+   HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+   ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+   CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+The following class defines all the enabling function for the STTS22H temperature sensor. 
+*/
+
 #pragma once
 
 #include "sfe_bus.h"
@@ -8,83 +52,45 @@
 #define STTS22H_ADDRESS_FIFTEEN 0x3C
 #define STTS22H_ADDRESS_FIFTYSIX 0x3E
 
-
 class QwDevSTTS22H
 {
 	public: 
 
-		QwDevSTTS22H() : _i2cAddress{0}, _cs{0} {};
+		QwDevSTTS22H() : _i2cAddress{0} {};
 				
-
-		///////////////////////////////////////////////////////////////////////
-		// init()
-		//
-		// Called to init the system. Connects to the device and sets it up for 
-		// operation
-
+		///////////////////////////////////////////////////// Device communication
 		bool init();
-
-		///////////////////////////////////////////////////////////////////////
-		// isConnected()
-		//
-		//
-		//  Parameter   Description
-		//  ---------   -----------------------------
-		//  retval      true if device is connected, false if not connected
-
 		bool isConnected(); // Checks if sensor ack's the I2C request
+		uint8_t getUniqueId();
 
 		int32_t writeRegisterRegion(uint8_t reg, uint8_t *data, uint16_t length);
-
-		//////////////////////////////////////////////////////////////////////////////////
-		// readRegisterRegion()
-		//
-		//
-		//  Parameter    Description
-		//  ---------    -----------------------------
-		//  reg          register to read from
-		//  data         Array to store data in
-		//  length       Length of the data to read
-		//  retval       -1 = error, 0 = success
-
 		int32_t readRegisterRegion(uint8_t reg, uint8_t *data, uint16_t length);
-
-		//////////////////////////////////////////////////////////////////////////////////
-		// setCommunicationBus()
-		//
-		// Called to set the Communication Bus object to use
-		//
-		//  Parameter    Description
-		//  ---------    -----------------------------
-		//  theBus       The Bus object to use
-		//  idBus        The bus ID for the target device.
-		//
-
 		void setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus, uint8_t i2cAddress);
 		void setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus);
-
-		uint8_t getUniqueId();
 
 		///////////////////////////////////////////////////// General Settings
 
 		bool setDataRate(uint8_t dataRate);
 		int8_t getDataRate();
+		int8_t getStatus();
+		bool enableAutoIncrement(bool enable);
+		bool enableBlockDataUpdate(bool enable);
 
-		/////////////////////// Interrupt Settings
-		bool setIntHighCelsius(float temp);
-		bool setIntLowCelsius(float temp);
+		///////////////////////////////////////////////////// Interrupt Settings
+		bool setInterruptHighC(float temp);
+		bool setInterruptLowC(float temp);
+		float getInterruptLowC();
+		float getInterruptHighC();
 
-		/////////////////////// Data Retrieval
+		//////////////////////////////////////////////////// Data Retrieval
 		bool dataReady();
 		bool getTempRaw(int16_t *temperature);
 		bool getTemperatureC(float *tempC);
 
 	private: 
 
-		
 		sfe_STTS22H::QwIDeviceBus *_sfeBus; 
 		uint8_t _i2cAddress;
-		uint8_t _cs;
 		stmdev_ctx_t sfe_dev; 
 };
 

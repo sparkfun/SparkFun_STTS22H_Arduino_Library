@@ -17,7 +17,7 @@ bool QwDevSTTS22H::init(void)
 		initCtx((void*)this, &sfe_dev); 			
 
 		// I2C ready, now check that we're using the correct sensor before moving on. 
-		if (getUniqueId() != STTS22H_ID)
+		if ( getUniqueId() != STTS22H_ID )
 			return false; 
 
 
@@ -132,41 +132,17 @@ uint8_t QwDevSTTS22H::getUniqueId()
 	return tempVal;
 }
 
-
-bool QwDevSTTS22H::deviceReset()
+int8_t QwDevSTTS22H::getStatus()
 {
 	int32_t retVal;
+	int8_t tempVal;
 
-	retVal = (&sfe_dev, 1);
-
-	if( retVal != 0 )
-		return false;
-
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-// getDeviceReset()
-// 
-// Checks to see that the reset bit has been set
-// 
-
-bool QwDevSTTS22H::getDeviceReset()
-{
-
-	int32_t retVal;
-	uint8_t tempVal;
-	retVal = (&sfe_dev, &tempVal);
+	retVal = stts22h_dev_status_get(&sfe_dev, &(stts22h_dev_status_t)tempVal);
 
 	if( retVal != 0 )
-		return false;
+		return -1;
 
-	if( (tempVal & 0x01) == 0x00 ){
-		return true; 
-	}
-
-	return false; 
-	
+	return tempVal; 
 }
 
 //----------------------------------------------General Settings ---------------------------------------------------
@@ -200,15 +176,52 @@ int8_t QwDevSTTS22H::getDataRate()
 }
 
 
+bool QwDevSTTS22H::enableBlockDataUpdate(bool enable)
+{
+	int32_t retVal;
 
+	retVal = stts22h_block_data_update_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+
+bool QwDevSTTS22H::enableAutoIncrement(bool enable)
+{
+	int32_t retVal;
+
+	retVal = stts22h_auto_increment_set(&sfe_dev, (uint8_t)enable);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+// 0.63 x .24
 //----------------------------------------------Interrupt Settings---------------------------------------------------
 
-bool QwDevSTTS22H::setIntHighCelsius(float temp)
+bool QwDevSTTS22H::setInterruptHighC(float temp)
 {
 	int32_t retVal;
 	int8_t tempC = (int8_t)(temp/0.64) + 64;
 
-	retVal = stts22h_(&sfe_dev, tempC);
+	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+bool QwDevSTTS22H::setInterruptLowC(float temp)
+{
+	int32_t retVal;
+	int8_t tempC = (int8_t)(temp/0.64) + 64;
+
+	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )
 		return false;
@@ -218,21 +231,37 @@ bool QwDevSTTS22H::setIntHighCelsius(float temp)
 
 
 
-bool QwDevSTTS22H::setIntLowCelsius(float temp)
+float QwDevSTTS22H::getInterruptHighC()
 {
 	int32_t retVal;
-	int8_t tempC = (int8_t)(temp/0.64) + 64;
+	int8_t tempC;
 
-	retVal = stts22h_(&sfe_dev, tempC);
+	retVal = stts22h_temp_trshld_high_get(&sfe_dev, &tempC);
 
-	if(retVal != 0)
-		return false;
+	if( retVal != 0 )
+		return -1;
 
-	return true;
-	
+	tempC = (float)(tempC) * 0.64 - 64;
+
+	return tempC;
 }
 
+float QwDevSTTS22H::getInterruptLowC()
+{
+	int32_t retVal;
+	int8_t tempC;
 
+	retVal = stts22h_temp_trshld_low_get(&sfe_dev, &tempC);
+
+	if( retVal != 0 )
+		return -1;
+
+	tempC = (float)(tempC) * 0.64 - 64;
+
+	return tempC;
+}
+
+//----------------------------------Data Retreival------------------------------------------------------------------
 bool QwDevSTTS22H::dataReady()
 {
 	uint8_t tempVal;
@@ -250,6 +279,9 @@ bool QwDevSTTS22H::dataReady()
 }
 
 
+/// @brief Retrieves signed temperature values. 
+/// @param temperature 
+/// @return  Returns true on successful retrieval. 
 bool QwDevSTTS22H::getTempRaw(int16_t *temperature)
 {
 	int32_t retVal;
