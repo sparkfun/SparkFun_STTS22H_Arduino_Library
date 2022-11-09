@@ -1,13 +1,8 @@
 #include "sfe_stts22h.h"
 
-//////////////////////////////////////////////////////////////////////////////
-// init()
-//
-// init the system
-//
-// Return Value: false on error, true on success
-//
 
+/// @brief Initializes various system parameter for communicating with the STTS22H
+/// @return  True on successful communication with STTS22H, false otherwise.
 bool QwDevSTTS22H::init(void)
 {
     //  do we have a bus yet? is the device connected?
@@ -24,18 +19,8 @@ bool QwDevSTTS22H::init(void)
     return true;
 }
 
-
-
-///////////////////////////////////////////////////////////////////////
-// isConnected()
-//
-// Called to determine if a ISM330DHCX device, at the provided i2c address
-// is connected.
-//
-//  Parameter   Description
-//  ---------   -----------------------------
-//  retVal      true if device is connected, false if not connected
-
+/// @brief Checks is the STTS22H is connected by retrieiving its' unique ID.
+/// @return  True is the unidue ID is correct and false otherwise.
 bool QwDevSTTS22H::isConnected()
 {
 		if (getUniqueId() != STTS22H_ID)
@@ -45,81 +30,37 @@ bool QwDevSTTS22H::isConnected()
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////
-// setCommunicationBus()
-//
-// Method to set the bus object that is used to communicate with the device
-//
-//  Parameter    Description
-//  ---------    -----------------------------
-//  theBus       The communication bus object
-//  i2cAddress   I2C address for the 6DoF
-
+/// @brief Establishes the bus driver and i2c address to use to communicate with the STTS22H - I2C only for this device.
+/// @return  nothing
 void QwDevSTTS22H::setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
     _sfeBus = &theBus;
 	_i2cAddress = i2cAddress; 
 }
 
-////////////////////////////////////////////////////////////////////////////////////
-// setCommunicationBus()
-//
-// Overloaded option for setting the data bus (theBus) object to a SPI bus object.
-//
-//  Parameter    Description
-//  ---------    -----------------------------
-//  theBus       The communication bus object
-//  
-
+/// @brief Establishes the bus driver to use to communicate with the STTS22H - I2C only for this device.
+/// @return  nothing
 void QwDevSTTS22H::setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus)
 {
     _sfeBus = &theBus;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// writeRegisterRegion()
-//
-// Writes data to the given register
-//
-//  Parameter    Description
-//  ---------    -----------------------------
-//  offset       The register to be written to
-//  data         Data to be written
-//  length       Number of bytes to be written
-
+/// @brief Writes to the given register using the selected bus - I2C only on this device.
+/// @return  Returns -1 on bus error and zero otherwise.
 int32_t QwDevSTTS22H::writeRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
     return _sfeBus->writeRegisterRegion(_i2cAddress, offset, data, length);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// readRegisterRegion()
-//
-// Reads data from the given register, auto-incrementing for each successive read
-//
-//  Parameter    Description
-//  ---------    -----------------------------
-//  offset       The register to be read from
-//  data         Pointer to where data will be saved
-//  length       Number of bytes to be read
-
+/// @brief Reads from the given register using the selected bus - I2C only on this device.
+/// @return  Returns -1 on bus error and zero otherwise.
 int32_t QwDevSTTS22H::readRegisterRegion(uint8_t offset, uint8_t *data, uint16_t length)
 {
     return _sfeBus->readRegisterRegion(_i2cAddress, offset, data, length);
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// setAccelFullScale()
-//
-// Sets the scale of the acceleromter's readings 2g - 16g
-//
-//  Parameter    Description
-//  ---------    -----------------------------
-//  val          The scale to be applied to the accelerometer (0 - 3)
-//
-// See sfe_ism330dhcx_defs.h for a list of valid arguments
-//
-
+/// @brief Retrieves the STTS22H's unique identification number
+/// @return  Returns the unique ID
 uint8_t QwDevSTTS22H::getUniqueId()
 {
 
@@ -132,6 +73,8 @@ uint8_t QwDevSTTS22H::getUniqueId()
 	return tempVal;
 }
 
+/// @brief Retrieves the status of the lower/higher threshold and one-shot only busy-bit.
+/// @return  Returns true on successful execution.
 int8_t QwDevSTTS22H::getStatus()
 {
 	int32_t retVal;
@@ -162,6 +105,8 @@ bool QwDevSTTS22H::setDataRate(uint8_t dataRate)
 	return true;
 }
 
+/// @brief Retrieves the output data rate of temperature values.
+/// @return  Returns true on successful execution.
 int8_t QwDevSTTS22H::getDataRate()
 {
 	stts22h_odr_temp_t tempVal;
@@ -176,6 +121,8 @@ int8_t QwDevSTTS22H::getDataRate()
 }
 
 
+/// @brief Enables/disables the bloack data update feature.
+/// @return  Returns true on successful execution.
 bool QwDevSTTS22H::enableBlockDataUpdate(bool enable)
 {
 	int32_t retVal;
@@ -189,6 +136,8 @@ bool QwDevSTTS22H::enableBlockDataUpdate(bool enable)
 }
 
 
+/// @brief Enables/disables the register auto-increment feature - enabled by default.
+/// @return  Returns true on successful execution.
 bool QwDevSTTS22H::enableAutoIncrement(bool enable)
 {
 	int32_t retVal;
@@ -200,9 +149,10 @@ bool QwDevSTTS22H::enableAutoIncrement(bool enable)
 
 	return true;
 }
-// 0.63 x .24
 //----------------------------------------------Interrupt Settings---------------------------------------------------
 
+/// @brief Sets the higher temperature threshold interrupt
+/// @return  Returns true on successful execution.
 bool QwDevSTTS22H::setInterruptHighC(float temp)
 {
 	int32_t retVal;
@@ -216,6 +166,8 @@ bool QwDevSTTS22H::setInterruptHighC(float temp)
 	return true;
 }
 
+/// @brief Sets the lower temperature threshold interrupt
+/// @return  Returns true on successful execution.
 bool QwDevSTTS22H::setInterruptLowC(float temp)
 {
 	int32_t retVal;
@@ -231,6 +183,8 @@ bool QwDevSTTS22H::setInterruptLowC(float temp)
 
 
 
+/// @brief Gets the higher temperature threshold interrupt
+/// @return  Returns the value in Celsius of the higher threshold.
 float QwDevSTTS22H::getInterruptHighC()
 {
 	int32_t retVal;
@@ -246,6 +200,8 @@ float QwDevSTTS22H::getInterruptHighC()
 	return tempC;
 }
 
+/// @brief Gets the lower temperature threshold interrupt
+/// @return  Returns the value in Celsius of the lower threshold.
 float QwDevSTTS22H::getInterruptLowC()
 {
 	int32_t retVal;
@@ -262,6 +218,8 @@ float QwDevSTTS22H::getInterruptLowC()
 }
 
 //----------------------------------Data Retreival------------------------------------------------------------------
+/// @brief Checks the data ready bit and returns true if bit is set. 
+/// @return  Returns true if bit is set
 bool QwDevSTTS22H::dataReady()
 {
 	uint8_t tempVal;
@@ -295,6 +253,9 @@ bool QwDevSTTS22H::getTempRaw(int16_t *temperature)
 	
 }
 
+/// @brief Converts raw temp to Celsius 
+/// @param tempC 
+/// @return  Returns true on successful retrieval. 
 bool QwDevSTTS22H::getTemperatureC(float *tempC)
 {
 	int16_t tempVal;
