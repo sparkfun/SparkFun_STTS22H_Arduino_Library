@@ -14,13 +14,13 @@ void initCtx(void* handle, stmdev_ctx_t* dev)
 }
 
 // Points to the write method in the STTS22H Arduino Library
-int32_t sfeISMWrite(void* fTarget, uint8_t reg, const uint8_t *bufp, uint16_t len)
+int32_t sfeSTTS22HWrite(void* fTarget, uint8_t reg, const uint8_t *bufp, uint16_t len)
 {
 	return (((QwDevSTTS22H*)fTarget)->writeRegisterRegion(reg, (uint8_t*)bufp, len));
 }
 
 // Points to the read method in the STTS22H Arduino Library
-int32_t sfeISMRead(void* fTarget, uint8_t reg, uint8_t *bufp, uint16_t len)
+int32_t sfeSTTS22HRead(void* fTarget, uint8_t reg, uint8_t *bufp, uint16_t len)
 {
     return (((QwDevSTTS22H*)fTarget)->readRegisterRegion(reg, bufp, len));
 }

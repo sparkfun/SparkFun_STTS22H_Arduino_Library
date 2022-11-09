@@ -95,7 +95,7 @@ int32_t QwDevSTTS22H::writeRegisterRegion(uint8_t offset, uint8_t *data, uint16_
 //////////////////////////////////////////////////////////////////////////////
 // readRegisterRegion()
 //
-// Reads data from the given register, auto-incrementing fore each successive read
+// Reads data from the given register, auto-incrementing for each successive read
 //
 //  Parameter    Description
 //  ---------    -----------------------------
@@ -135,14 +135,14 @@ uint8_t QwDevSTTS22H::getUniqueId()
 int8_t QwDevSTTS22H::getStatus()
 {
 	int32_t retVal;
-	int8_t tempVal;
+	stts22h_dev_status_t tempVal;
 
-	retVal = stts22h_dev_status_get(&sfe_dev, &(stts22h_dev_status_t)tempVal);
+	retVal = stts22h_dev_status_get(&sfe_dev, &tempVal);
 
 	if( retVal != 0 )
 		return -1;
 
-	return tempVal; 
+	return (int8_t)tempVal.busy; 
 }
 
 //----------------------------------------------General Settings ---------------------------------------------------
@@ -154,7 +154,7 @@ bool QwDevSTTS22H::setDataRate(uint8_t dataRate)
 {
 	int32_t retVal;
 
-	retVal = stts22h_temp_data_rate_set(&sfe_dev, (stts22h_odr_temp_t)&dataRate);
+	retVal = stts22h_temp_data_rate_set(&sfe_dev, (stts22h_odr_temp_t)dataRate);
 
 	if( retVal != 0 )
 		return false;
@@ -234,7 +234,7 @@ bool QwDevSTTS22H::setInterruptLowC(float temp)
 float QwDevSTTS22H::getInterruptHighC()
 {
 	int32_t retVal;
-	int8_t tempC;
+	uint8_t tempC;
 
 	retVal = stts22h_temp_trshld_high_get(&sfe_dev, &tempC);
 
@@ -249,7 +249,7 @@ float QwDevSTTS22H::getInterruptHighC()
 float QwDevSTTS22H::getInterruptLowC()
 {
 	int32_t retVal;
-	int8_t tempC;
+	uint8_t tempC;
 
 	retVal = stts22h_temp_trshld_low_get(&sfe_dev, &tempC);
 
@@ -301,7 +301,7 @@ bool QwDevSTTS22H::getTemperatureC(float *tempC)
 	bool retVal;
 
 	retVal = getTempRaw(&tempVal);
-	tempC = stts22h_from_lsb_to_celsius(tempVal)
+	*tempC = stts22h_from_lsb_to_celsius(tempVal);
 
 	return retVal;
 }
