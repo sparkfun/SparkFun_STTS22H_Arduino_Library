@@ -73,8 +73,9 @@ class QwDevSTTS22H
 		bool setDataRate(uint8_t dataRate);
 		int8_t getDataRate();
 		int8_t getStatus();
-		bool enableAutoIncrement(bool enable);
-		bool enableBlockDataUpdate(bool enable);
+		bool enableAutoIncrement(bool enable = true);
+		uint8_t getAutoIncrement();
+		bool enableBlockDataUpdate(bool enable = true);
 
 		///////////////////////////////////////////////////// Interrupt Settings
 		bool setInterruptHighC(float temp);

@@ -149,6 +149,22 @@ bool QwDevSTTS22H::enableAutoIncrement(bool enable)
 
 	return true;
 }
+
+/// @brief Checks the auto-increment bit.
+/// @return  Returns auto increment bit. 
+uint8_t QwDevSTTS22H::getAutoIncrement()
+{
+	int32_t retVal;
+	uint8_t tempVal;
+
+	retVal = stts22h_auto_increment_get(&sfe_dev, &tempVal);
+
+	if( retVal != 0 )
+		return 0;
+
+	return tempVal;
+}
+
 //----------------------------------------------Interrupt Settings---------------------------------------------------
 
 /// @brief Sets the higher temperature threshold interrupt

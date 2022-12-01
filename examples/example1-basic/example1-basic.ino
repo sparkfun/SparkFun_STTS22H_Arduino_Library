@@ -22,6 +22,7 @@ License(http://opensource.org/licenses/MIT).
 #include "SparkFun_STTS22H.h"
 
 SparkFun_STTS22H mySTTS; 
+float tempC; 
 
 void setup()
 {
@@ -35,9 +36,20 @@ void setup()
 		while(1);
 	}
 
+	mySTTS.setDataRate(STTS22H_1Hz);
+	// Not enabled by default as the datasheet implies. 
+	mySTTS.enableAutoIncrement();
+
 }
 
 void loop()
 {
+	if( mySTTS.dataReady() )
+	{
+		mySTTS.getTemperatureC(&tempC);
+		Serial.print("Temp: "); 
+		Serial.print(tempC);
+		Serial.println("C"); 
+	}
 	delay(200);
 }
