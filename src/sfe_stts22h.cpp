@@ -246,8 +246,6 @@ bool QwDevSTTS22H::dataReady()
 	if( retVal != 0 )
 		return false;
 
-	Serial.print("TempVal: ");
-	Serial.println(tempVal);
 	if( tempVal )
 		return true;
 

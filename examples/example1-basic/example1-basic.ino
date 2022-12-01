@@ -37,8 +37,6 @@ void setup()
 	}
 
 	mySTTS.setDataRate(STTS22H_1Hz);
-
-	// Not enabled by default as the datasheet says. 
 	mySTTS.enableAutoIncrement();
 
 }
