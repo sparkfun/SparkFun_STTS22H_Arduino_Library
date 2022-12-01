@@ -246,6 +246,8 @@ bool QwDevSTTS22H::dataReady()
 	if( retVal != 0 )
 		return false;
 
+	Serial.print("TempVal: ");
+	Serial.println(tempVal);
 	if( tempVal )
 		return true;
 
@@ -283,4 +285,34 @@ bool QwDevSTTS22H::getTemperatureC(float *tempC)
 	return retVal;
 }
 
+/// @brief Converts raw temp to Farenheit 
+/// @param tempF 
+/// @return  Returns true on successful retrieval. 
+bool QwDevSTTS22H::getTemperatureF(float *tempF)
+{
+	int16_t tempVal;
+	bool retVal;
 
+	retVal = getTempRaw(&tempVal);
+	*tempF = stts22h_from_lsb_to_celsius(tempVal);
+
+	*tempF = (*tempF * 1.8) + 32; 
+
+	return retVal;
+}
+
+/// @brief Converts raw temp to Kelvin 
+/// @param tempK 
+/// @return  Returns true on successful retrieval. 
+bool QwDevSTTS22H::getTemperatureK(float *tempK)
+{
+	int16_t tempVal;
+	bool retVal;
+
+	retVal = getTempRaw(&tempVal);
+	*tempK = stts22h_from_lsb_to_celsius(tempVal);
+
+	*tempK = *tempK + 273.15;
+
+	return retVal;
+}

@@ -37,13 +37,15 @@ void setup()
 	}
 
 	mySTTS.setDataRate(STTS22H_1Hz);
-	// Not enabled by default as the datasheet implies. 
+
+	// Not enabled by default as the datasheet says. 
 	mySTTS.enableAutoIncrement();
 
 }
 
 void loop()
 {
+
 	if( mySTTS.dataReady() )
 	{
 		mySTTS.getTemperatureC(&tempC);
@@ -52,4 +54,5 @@ void loop()
 		Serial.println("C"); 
 	}
 	delay(200);
+
 }

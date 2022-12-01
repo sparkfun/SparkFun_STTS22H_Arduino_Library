@@ -87,6 +87,8 @@ class QwDevSTTS22H
 		bool dataReady();
 		bool getTempRaw(int16_t *temperature);
 		bool getTemperatureC(float *tempC);
+		bool getTemperatureF(float *tempF);
+		bool getTemperatureK(float *tempK);
 
 	private: 
 
