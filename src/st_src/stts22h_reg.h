@@ -287,7 +287,7 @@ int32_t stts22h_write_reg(stmdev_ctx_t *ctx, uint8_t reg,
                           uint8_t *data,
                           uint16_t len);
 
-float_t stts22h_from_lsb_to_celsius(int16_t lsb);
+float stts22h_from_lsb_to_celsius(int16_t lsb);
 
 typedef enum
 {

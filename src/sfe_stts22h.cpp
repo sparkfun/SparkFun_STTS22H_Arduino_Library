@@ -175,7 +175,6 @@ bool QwDevSTTS22H::setInterruptHighC(float temp)
 	int32_t retVal;
 	int8_t tempC = (int8_t)(temp/0.64) + 64;
 
-	Serial.println(tempC);
 	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )
@@ -210,7 +209,6 @@ bool QwDevSTTS22H::setInterruptHighF(float temp)
 	float tempF = (temp - 32)/1.8; 
 	int8_t tempC = (int8_t)(tempF/0.64) + 64;
 
-	Serial.println(tempC);
 	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )
@@ -245,7 +243,6 @@ bool QwDevSTTS22H::setInterruptHighK(float temp)
 	float tempK = temp - 273.15; 
 	int8_t tempC = (int8_t)(tempK/0.64) + 64;
 
-	Serial.println(tempC);
 	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )

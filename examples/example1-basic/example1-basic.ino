@@ -46,6 +46,7 @@ void setup()
 		while(1);
 	}
 
+
 	mySTTS.setDataRate(STTS22H_50Hz);
 	mySTTS.enableAutoIncrement();
 
