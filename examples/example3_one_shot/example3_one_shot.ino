@@ -56,7 +56,8 @@ void setup()
 	// powered down.
 	mySTTS.setDataRate(STTS22H_POWER_DOWN);
 	delay(10);
-	mySTTS.setDataRate(STTS22H_1Hz); 
+	// Force new reading, temp sensor will power down after conversion. 
+	mySTTS.setDataRate(STTS22H_ONE_SHOT); 
 
 	// Enables incrementing register behavior for the IC.
 	// It is not enabled by default as the datsheet states and
@@ -70,11 +71,9 @@ void loop()
 {
 
 	// Temp sensor will power down automatically after single read.
-
 	if( mySTTS.dataReady() ) 
 	{
 
-		mySTTS.setDataRate(STTS22H_ONE_SHOT); 
 		mySTTS.getTemperatureF(&temp);
 
 		// Temperature in different units can be retrieved
@@ -88,6 +87,9 @@ void loop()
 		Serial.println("F"); 
 
 		delay(10000);
+
+		// Enable another reading.
+		mySTTS.setDataRate(STTS22H_ONE_SHOT); 
 
 	} 
 
