@@ -1,7 +1,7 @@
 /*
-example1_basic.ino
+example2_basic.ino
 
-This example shows basic data retrieval from the SparkFun Temperature Sensor - STTS22H.
+This example desmonstrates how to set temperature thresholds to trigger an interrupt. 
 
 Output Data Rates: 
 
@@ -35,12 +35,20 @@ SparkFun_STTS22H mySTTS;
 
 float temp; 
 
+// These values are in Farenheit
+float interruptHighValue = 90.5;
+float interruptLowValue = 42.0;
+
+int tempInterrupt = 1; 
+
 void setup()
 {
 
 	Wire.begin();
 
 	Serial.begin(115200);
+
+	pinMode(tempInterrupt, INPUT);
 
 	if( !mySTTS.begin() )
 	{
@@ -58,6 +66,18 @@ void setup()
 	// is vital for reading the two temperature registers.
 	mySTTS.enableAutoIncrement();
 
+
+	// Set interrupts for both lower and higher thresholds.
+	// Note: These functions accept Farenheit as their arguments.
+	// Other functions for different units just below. 
+	mySTTS.setInterruptLowF(interruptLowValue);
+	mySTTS.setInterruptHighF(interruptHighValue);
+
+	//mySTTS.setInterruptLowC(interruptLowValue);
+	//mySTTS.setInterruptHighC(interruptHighValue);
+
+	//mySTTS.setInterruptLowK(interruptLowValue);
+	//mySTTS.setInterruptHighK(interruptHighValue);
 
 	delay(100);
 }
@@ -78,6 +98,12 @@ void loop()
 		Serial.print("Temp: "); 
 		Serial.print(temp);
 		Serial.println("F"); 
+	}
+
+	if( digitalRead(tempInterrupt) == LOW )
+	{
+		Serial.println("Temperature threshold"); 
+		while(1);
 	}
 
 }
