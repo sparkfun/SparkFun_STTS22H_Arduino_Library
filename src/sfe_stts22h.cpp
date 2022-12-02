@@ -168,12 +168,14 @@ uint8_t QwDevSTTS22H::getAutoIncrement()
 //----------------------------------------------Interrupt Settings---------------------------------------------------
 
 /// @brief Sets the higher temperature threshold interrupt
+/// @param temp - temperature in Celsius
 /// @return  Returns true on successful execution.
 bool QwDevSTTS22H::setInterruptHighC(float temp)
 {
 	int32_t retVal;
 	int8_t tempC = (int8_t)(temp/0.64) + 64;
 
+	Serial.println(tempC);
 	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )
@@ -183,13 +185,14 @@ bool QwDevSTTS22H::setInterruptHighC(float temp)
 }
 
 /// @brief Sets the lower temperature threshold interrupt
+/// @param temp - temperature in Celsius
 /// @return  Returns true on successful execution.
 bool QwDevSTTS22H::setInterruptLowC(float temp)
 {
 	int32_t retVal;
 	int8_t tempC = (int8_t)(temp/0.64) + 64;
 
-	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
+	retVal = stts22h_temp_trshld_low_set(&sfe_dev, tempC);
 
 	if( retVal != 0 )
 		return false;
@@ -198,6 +201,75 @@ bool QwDevSTTS22H::setInterruptLowC(float temp)
 }
 
 
+/// @brief Sets the higher temperature threshold interrupt
+/// @param temp - temperature in Farenheit
+/// @return  Returns true on successful execution.
+bool QwDevSTTS22H::setInterruptHighF(float temp)
+{
+	int32_t retVal;
+	float tempF = (temp - 32)/1.8; 
+	int8_t tempC = (int8_t)(tempF/0.64) + 64;
+
+	Serial.println(tempC);
+	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+/// @brief Sets the lower temperature threshold interrupt
+/// @param temp - temperature in Farenheit
+/// @return  Returns true on successful execution.
+bool QwDevSTTS22H::setInterruptLowF(float temp)
+{
+	int32_t retVal;
+	float tempF = (temp - 32)/1.8; 
+	int8_t tempC = (int8_t)(temp/0.64) + 64;
+
+	retVal = stts22h_temp_trshld_low_set(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+/// @brief Sets the higher temperature threshold interrupt
+/// @param temp - temperature in Kelvin
+/// @return  Returns true on successful execution.
+bool QwDevSTTS22H::setInterruptHighK(float temp)
+{
+	int32_t retVal;
+	float tempK = temp - 273.15; 
+	int8_t tempC = (int8_t)(tempK/0.64) + 64;
+
+	Serial.println(tempC);
+	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
+
+/// @brief Sets the lower temperature threshold interrupt
+/// @param temp - temperature in Kelvin
+/// @return  Returns true on successful execution.
+bool QwDevSTTS22H::setInterruptLowK(float temp)
+{
+	int32_t retVal;
+	float tempK = temp - 273.15; 
+	int8_t tempC = (int8_t)(tempK/0.64) + 64;
+
+	retVal = stts22h_temp_trshld_low_set(&sfe_dev, tempC);
+
+	if( retVal != 0 )
+		return false;
+
+	return true;
+}
 
 /// @brief Gets the higher temperature threshold interrupt
 /// @return  Returns the value in Celsius of the higher threshold.

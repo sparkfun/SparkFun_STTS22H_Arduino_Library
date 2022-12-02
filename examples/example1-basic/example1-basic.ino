@@ -20,24 +20,38 @@ License(http://opensource.org/licenses/MIT).
 
 #include <Wire.h>
 #include "SparkFun_STTS22H.h"
+#include "SparkFun_Qwiic_OLED.h"
+#include <string>
+
+int intTemp = 1;
+
 
 SparkFun_STTS22H mySTTS; 
-float tempC; 
+QwiicMicroOLED oled; 
+String highTemp = "High Temp";
+
+float tempF; 
 
 void setup()
 {
+	pinMode(intTemp, INPUT);
+
 	Wire.begin();
 
 	Serial.begin(115200);
 
-	if( !mySTTS.begin() )
+	if( !mySTTS.begin() || !oled.begin())
 	{
 		Serial.println("Did not begin.");
 		while(1);
 	}
 
-	mySTTS.setDataRate(STTS22H_1Hz);
+	mySTTS.setDataRate(STTS22H_50Hz);
 	mySTTS.enableAutoIncrement();
+
+	mySTTS.setInterruptHighF(80);
+
+
 
 }
 
@@ -46,11 +60,26 @@ void loop()
 
 	if( mySTTS.dataReady() )
 	{
-		mySTTS.getTemperatureC(&tempC);
+		mySTTS.getTemperatureF(&tempF);
 		Serial.print("Temp: "); 
-		Serial.print(tempC);
-		Serial.println("C"); 
+		Serial.print(tempF);
+		Serial.println("F"); 
 	}
+
+	oled.setCursor(0,0);
+	oled.erase();
+	oled.print(tempF);
+	oled.display();
 	delay(200);
+
+	if( digitalRead(intTemp) == LOW )
+	{
+		oled.setCursor(0,0);
+		oled.erase();
+		oled.print(highTemp);
+		Serial.println("Interrupt!");
+		while(1);
+	}
+
 
 }

@@ -80,6 +80,10 @@ class QwDevSTTS22H
 		///////////////////////////////////////////////////// Interrupt Settings
 		bool setInterruptHighC(float temp);
 		bool setInterruptLowC(float temp);
+		bool setInterruptHighF(float temp);
+		bool setInterruptLowF(float temp);
+		bool setInterruptHighK(float temp);
+		bool setInterruptLowK(float temp);
 		float getInterruptLowC();
 		float getInterruptHighC();
 
