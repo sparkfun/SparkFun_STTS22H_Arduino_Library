@@ -1,12 +1,13 @@
 /*
-example1_basic.ino
+example3_basic.ino
 
-This example shows basic data retrieval from the SparkFun Temperature Sensor - STTS22H.
+This example shows basic data retrieval using the "one-shot" feature i.e. - get the temp
+now feature. 
 
 Output Data Rates: 
 
 STTS22H_POWER_DOWN
-STTS22H_ONE_SHOT  
+STTS22H_ONE_SHOT   < -------- This one. 
 STTS22H_1Hz       
 STTS22H_25Hz      
 STTS22H_50Hz      
@@ -55,7 +56,7 @@ void setup()
 	// powered down.
 	mySTTS.setDataRate(STTS22H_POWER_DOWN);
 	delay(10);
-	mySTTS.setDataRate(STTS22H_1Hz);
+	mySTTS.setDataRate(STTS22H_1Hz); 
 
 	// Enables incrementing register behavior for the IC.
 	// It is not enabled by default as the datsheet states and
@@ -68,10 +69,12 @@ void setup()
 void loop()
 {
 
-	// Only use data ready for one-shot mode or 1Hz output. 
+	// Temp sensor will power down automatically after single read.
+
 	if( mySTTS.dataReady() ) 
 	{
 
+		mySTTS.setDataRate(STTS22H_ONE_SHOT); 
 		mySTTS.getTemperatureF(&temp);
 
 		// Temperature in different units can be retrieved
@@ -84,9 +87,11 @@ void loop()
 		Serial.print(temp);
 		Serial.println("F"); 
 
+		delay(10000);
+
 	} 
 
-	// delay = 1/ODR 
-	delay(1000);
+	// Demonstrative delay. 
+	delay(500);
 
 }

@@ -56,10 +56,14 @@ void setup()
 		while(1);
 	}
 
+	Serial.println("Ready");
 
 	// Other output data rates can be found in the description
-	// above. 
-	mySTTS.setDataRate(STTS22H_50Hz);
+	// above. To change the ODR or mode, the device must first be
+	// powered down.
+	mySTTS.setDataRate(STTS22H_POWER_DOWN);
+	delay(10);
+	mySTTS.setDataRate(STTS22H_25Hz);
 
 	// Enables incrementing register behavior for the IC.
 	// It is not enabled by default as the datsheet states and
@@ -85,25 +89,27 @@ void setup()
 void loop()
 {
 
-	if( mySTTS.dataReady() )
-	{
-		mySTTS.getTemperatureF(&temp);
+	// Checking if data ready is not necessary when output is set higher 
+	// than 1Hz. 
+	mySTTS.getTemperatureF(&temp);
 
-		// Temperature in different units can be retrieved
-		// using the following functions.
+	// Temperature in different units can be retrieved
+	// using the following functions.
 
-		//mySTTS.getTemperatureC(&temp);
-		//mySTTS.getTemperatureK(&temp);
+	//mySTTS.getTemperatureC(&temp);
+	//mySTTS.getTemperatureK(&temp);
 
-		Serial.print("Temp: "); 
-		Serial.print(temp);
-		Serial.println("F"); 
-	}
+	Serial.print("Temp: "); 
+	Serial.print(temp);
+	Serial.println("F"); 
 
 	if( digitalRead(tempInterrupt) == LOW )
 	{
 		Serial.println("Temperature threshold"); 
 		while(1);
 	}
+
+	// delay = 1/ODR 
+	delay(40);
 
 }
