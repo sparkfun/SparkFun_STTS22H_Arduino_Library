@@ -1,5 +1,5 @@
 /*
-example1_basic.ino
+example1-basic.ino
 
 This example shows basic data retrieval from the SparkFun Temperature Sensor - STTS22H.
 

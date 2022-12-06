@@ -25,8 +25,8 @@ bool QwDevSTTS22H::isConnected()
 {
 		if (getUniqueId() != STTS22H_ID)
 			return false; 
-		else
-			return true;
+
+		return true; 
 }
 
 
@@ -35,7 +35,7 @@ bool QwDevSTTS22H::isConnected()
 void QwDevSTTS22H::setCommunicationBus(sfe_STTS22H::QwIDeviceBus &theBus, uint8_t i2cAddress)
 {
     _sfeBus = &theBus;
-	_i2cAddress = i2cAddress; 
+		_i2cAddress = i2cAddress; 
 }
 
 /// @brief Establishes the bus driver to use to communicate with the STTS22H - I2C only for this device.
@@ -322,7 +322,7 @@ bool QwDevSTTS22H::dataReady()
 }
 
 
-/// @brief Retrieves signed temperature values. 
+/// @brief Retrieves raw temperature values. 
 /// @param temperature 
 /// @return  Returns true on successful retrieval. 
 bool QwDevSTTS22H::getTempRaw(int16_t *temperature)

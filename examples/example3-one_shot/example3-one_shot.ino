@@ -1,5 +1,5 @@
 /*
-example3_basic.ino
+example3-one_shot.ino
 
 This example shows basic data retrieval using the "one-shot" feature i.e. - get the temp
 now feature. 
@@ -86,6 +86,7 @@ void loop()
 		Serial.print(temp);
 		Serial.println("F"); 
 
+		// Wait 10 seconds for until we initiate another read.
 		delay(10000);
 
 		// Enable another reading.
@@ -94,6 +95,6 @@ void loop()
 	} 
 
 	// Demonstrative delay. 
-	delay(500);
+	delay(100);
 
 }
