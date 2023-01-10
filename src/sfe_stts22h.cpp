@@ -206,10 +206,10 @@ bool QwDevSTTS22H::setInterruptLowC(float temp)
 bool QwDevSTTS22H::setInterruptHighF(float temp)
 {
 	int32_t retVal;
-	float tempF = (temp - 32)/1.8; 
-	int8_t tempC = (int8_t)(tempF/0.64) + 64;
+	float tempC = (temp - 32)/1.8; 
+	int8_t tempConv = (int8_t)(tempC/0.64) + 64;
 
-	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempC);
+	retVal = stts22h_temp_trshld_high_set(&sfe_dev, tempConv);
 
 	if( retVal != 0 )
 		return false;
@@ -223,10 +223,10 @@ bool QwDevSTTS22H::setInterruptHighF(float temp)
 bool QwDevSTTS22H::setInterruptLowF(float temp)
 {
 	int32_t retVal;
-	float tempF = (temp - 32)/1.8; 
-	int8_t tempC = (int8_t)(temp/0.64) + 64;
+	float tempC = (temp - 32)/1.8; 
+	int8_t tempConv = (int8_t)(tempC/0.64) + 64;
 
-	retVal = stts22h_temp_trshld_low_set(&sfe_dev, tempC);
+	retVal = stts22h_temp_trshld_low_set(&sfe_dev, tempConv);
 
 	if( retVal != 0 )
 		return false;
